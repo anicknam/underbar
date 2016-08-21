@@ -34,15 +34,15 @@
 
     describe('last', function() {
       it('should pull the last element from an array', function() {
-        expect(_.last([1,2,3])).to.equal(3);
+        expect(_.last([1,2,3])).to.equal(3); //worked
       });
 
       it('should accept an index argument', function() {
-        expect(_.last([1,2,3], 2)).to.eql([2, 3]);
+        expect(_.last([1,2,3], 2)).to.eql([2, 3]); //worked
       });
 
       it('should return empty array if zero is passed in as the index', function() {
-        expect(_.last([1,2,3], 0)).to.eql([]);
+        expect(_.last([1,2,3], 0)).to.eql([]); //worked
       });
 
       it('should return all the array\'s elements if the index argument is larger than the length of the array', function() {
@@ -52,12 +52,12 @@
 
     describe('each', function() {
       it('should iterate over arrays, providing access to the element, index, and array itself', function() {
-        var animals = ['ant', 'bat', 'cat'];
+        var animals = ['ant', 'bat', 'cat']; //collection
         var iterationInputs = [];
 
         _.each(animals, function(animal, index, list) {
           iterationInputs.push([animal, index, list]);
-        });
+        }); //iterator
 
         expect(iterationInputs).to.eql([
           ['ant', 0, animals],
@@ -140,6 +140,7 @@
         expect(odds).to.eql([1, 3, 5]);
       });
 
+      //worked
       it('should produce a brand new array instead of modifying the input array', function() {
         var isOdd = function(num) { return num % 2 !== 0; };
         var numbers = [1, 2, 3, 4, 5, 6];
