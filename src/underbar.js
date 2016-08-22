@@ -90,20 +90,22 @@
 
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
+
+    function negate (something) {
+      return function () {
+          return !something.apply(this, arguments);
+      };
+    }
+
+    var negativeTest = negate(test);
+
+    return _.filter(collection, negativeTest);
+
     // TIP: see if you can re-use _.filter() here, without simply
     // copying code in and modifying it
-    var result=[];
-    for (var i = 0; i < collection.length; i++) {
-     if (!test(collection[i])) {
-       result.push(collection[i]);
-     }
-   }
-   return result;
-    // _.filter(collection, function(test){
-    //   return !test.apply(null, collection);
-    // }
-    // });
+
   };
+
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
