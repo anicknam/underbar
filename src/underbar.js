@@ -1,5 +1,4 @@
-///What up Afsoon
-//Hello :-) :):)
+
 (function() {
   'use strict';
 
@@ -217,6 +216,20 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+
+    if (arguments.length == 2) {
+      return _.reduce(collection, function(accumulator, item){
+        return (accumulator == true && iterator(item) == true) ? true : false;
+      }, true)
+    } else if (arguments.length < 2) {
+      return _.reduce(collection, function(accumulator, item){
+        return (accumulator == true && item == true) ? true : false;
+      }, true)
+    }
+
+
+
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is

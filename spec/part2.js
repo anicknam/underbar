@@ -27,7 +27,8 @@
 
       it('passes for a collection of all-truthy results', function() {
         expect(_.every([true, {}, 1], _.identity)).to.be.true;
-      });
+      }); //failed -- TypeError: Object.keys(...).forEach is not a function. Objects are true
+      //need to write something for objects
 
       it('fails for a collection of all-falsy results', function() {
         expect(_.every([null, 0, undefined], _.identity)).to.be.false;
