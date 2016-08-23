@@ -247,14 +247,15 @@
 
       it('should invoke the iterator on the first element when given an accumulator', function() {
         var sumSquares = function(tally, item) {return tally + item * item; };
-        var total = _.reduce([2, 3], sumSquares, 0);
+        var total = _.reduce([2, 3], sumSquares, 0); //initial+... :    0+2^2+3^2
 
         expect(total).to.equal(13);
       });
 
       it('should not invoke the iterator on the first element when using it as an accumulator', function() {
         var sumSquares = function(tally, item) {return tally + item * item; };
-        var total = _.reduce([2, 3], sumSquares);
+        var total = _.reduce([2, 3], sumSquares); //2+3^2
+
         expect(total).to.equal(11);
       });
 

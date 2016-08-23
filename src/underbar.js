@@ -87,6 +87,9 @@
    return result;
   };
 
+// ANSWERS
+  //  return n === undefined ? array[0] : array.slice(0, n);
+
   // Return all elements of an array that don't pass a truth test.
   _.reject = function(collection, test) {
 
@@ -235,6 +238,29 @@
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
   _.some = function(collection, iterator) {
+
+    function isTrue(value) {
+      if (value) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
+
+    var callBack;
+
+    if (arguments.length < 2) {
+      callBack = isTrue;
+    } else {
+      callBack = iterator;
+    }
+
+    return _.reduce(collection, function(accumulator, item){
+        return (accumulator == true || callBack(item) == true) ? true : false;
+    }, false)
+
+    //at least one element that evalutes to true when the callback is applied
     // TIP: There's a very clever way to re-use every() here.
   };
 
@@ -257,7 +283,33 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
-  _.extend = function(obj) {
+  _.extend = function(destination) {
+
+    var keyArray = [];
+    var sourceArray = [];
+
+    for (var i = 1; i < arguments.length; i++) {
+      window["source" + i] = arguments[i];
+      sourceArray.push(window["source" + i]);
+      window["keys" + i] = Object.keys(window["source" + i]);
+      keyArray.push(window["keys" + i]);
+
+    }
+
+    function operation(item, source) {
+      if (destination[item] == undefined) {
+        destination[item] = source[item];
+      }
+    }
+
+    for (var j = 0; j < keyArray.length; j++) {
+      for (var x = 0; x < keyArray[j].length; x++) {
+          destination[keyArray[j][x]]=sourceArray[j][keyArray[j][x]];
+      }
+    }
+
+    return destination;
+
   };
 
   // Like extend, but doesn't ever overwrite a key that already

@@ -83,7 +83,7 @@
 
       it('should pass for a set containing one truthy value that is a string', function() {
         expect(_.some([null, 0, 'yes', false], _.identity)).to.be.true;
-      });
+      }); //forEach is not a function
 
       it('should fail for a set containing no matching values', function() {
         expect(_.some([1, 11, 29], isEven)).to.be.false;
