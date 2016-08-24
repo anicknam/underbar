@@ -285,26 +285,15 @@
   //   }); // obj1 now contains key1, key2, key3 and bla
   _.extend = function(destination) {
 
-    var keyArray = [];
     var sourceArray = [];
 
     for (var i = 1; i < arguments.length; i++) {
-      window["source" + i] = arguments[i];
-      sourceArray.push(window["source" + i]);
-      window["keys" + i] = Object.keys(window["source" + i]);
-      keyArray.push(window["keys" + i]);
-
+      sourceArray.push(arguments[i]);
     }
 
-    function operation(item, source) {
-      if (destination[item] == undefined) {
-        destination[item] = source[item];
-      }
-    }
-
-    for (var j = 0; j < keyArray.length; j++) {
-      for (var x = 0; x < keyArray[j].length; x++) {
-          destination[keyArray[j][x]]=sourceArray[j][keyArray[j][x]];
+    for (var j = 0; j < sourceArray.length; j++) {
+      for (var key in sourceArray[j]) {
+          destination[key]=sourceArray[j][key];
       }
     }
 
@@ -314,8 +303,26 @@
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
-  _.defaults = function(obj) {
+  _.defaults = function(destination) {
+
+    var sourceArray = [];
+
+    for (var i = 1; i < arguments.length; i++) {
+      sourceArray.push(arguments[i]);
+    }
+
+    for (var j = 0; j < sourceArray.length; j++) {
+      for (var key in sourceArray[j]) {
+        if (destination[key] === undefined){
+          destination[key]=sourceArray[j][key];
+        }
+      }
+    }
+
+    return destination;
+
   };
+
 
 
   /**
@@ -349,7 +356,7 @@
     };
   };
 
-  // Memorize an expensive function's results by storing them. You may assume
+  // Memoize an expensive function's results by storing them. You may assume
   // that the function takes only one argument and that it is a primitive.
   // memoize could be renamed to oncePerUniqueArgumentList; memoize does the
   // same thing as once, but based on many sets of unique arguments.
@@ -357,7 +364,22 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
+
+
+
   _.memoize = function(func) {
+
+    var dict={};
+
+    var createMemo = function(n) {
+      var result;
+      if (dict[n] === undefined) {
+        result = func.apply(this, arguments);
+        dict[n] = result;
+      }
+      return result;
+    }
+   return createMemo;
   };
 
   // Delays a function for the given number of milliseconds, and then calls
@@ -367,7 +389,29 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
   _.delay = function(func, wait) {
+    // var curTime = getTime...
+    // var backTime = cuTime - wait
+    // when backTime becomes current time,
+
+    // var cur = new Date();
+    // var waste;
+    // var curTime = cur.getTime();
+    // var startTime = curTime - wait;
+    // var delayedTime= new Date();
+    // delayedTime.setTime(startTime);
+    // var time = startTime;
+
+    // console.log(time, curTime, startTime);
+
+    // while (time < curTime){
+    //   waste =1;
+    //   time = delayedTime.getTime();
+    // }
+    // return function () {
+    //   return  func.apply(this,arguments);
+    // }
   };
+
 
 
   /**
