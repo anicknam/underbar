@@ -391,29 +391,9 @@
   _.delay = function(func, wait) {
 
     var args = Array.prototype.slice.call(arguments, 2);
-    return setTimeout(function () { return func.apply(null, args); }, wait);
+    return setTimeout(function () { return func.apply(this, args); }, wait);
 
-    // var curTime = getTime...
-    // var backTime = cuTime - wait
-    // when backTime becomes current time,
 
-    // var cur = new Date();
-    // var waste;
-    // var curTime = cur.getTime();
-    // var startTime = curTime - wait;
-    // var delayedTime= new Date();
-    // delayedTime.setTime(startTime);
-    // var time = startTime;
-
-    // console.log(time, curTime, startTime);
-
-    // while (time < curTime){
-    //   waste =1;
-    //   time = delayedTime.getTime();
-    // }
-    // return function () {
-    //   return  func.apply(this,arguments);
-    // }
   };
 
 
@@ -429,7 +409,21 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
+    var result=[];
+    var dict = {};
+
+    var curRandomNo;
+    while (Object.keys(dict).length < array.length) {  //Object.keys(dict) is an array of keys
+      curRandomNo = Math.floor(Math.random() * array.length);
+      if (dict[String(curRandomNo)] === undefined){
+        dict[String(curRandomNo)] = 1;
+        result.push(array[curRandomNo]);
+      }
+    }
+
+    return result;
   };
+
 
 
   /**
