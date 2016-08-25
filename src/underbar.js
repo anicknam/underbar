@@ -186,16 +186,24 @@
     var accum;
     var index;
 
+    var collect;
+    if (Array.isArray(collection)){
+      collect=collection;
+    } else if (collection.length === undefined) {
+      collect = _.map(Object.keys(collection),function (key){return collection[key];})  // An array of values of our collection object
+    }
+
     if (arguments.length == 3) {
       index = 0;
       accum = accumulator;
     } else if (arguments.length < 3) {
       index = 1;
-      accum = collection[0];
+      accum = collect[0];
     }
 
-    while (index < collection.length) {
-      accum = iterator(accum, collection[index]);
+
+    while (index < collect.length) {
+      accum = iterator(accum, collect[index]);
       index++
     }
 
@@ -222,11 +230,11 @@
 
     if (arguments.length == 2) {
       return _.reduce(collection, function(accumulator, item){
-        return (accumulator == true && iterator(item) == true) ? true : false;
+        return (accumulator == true && Boolean(iterator(item)) == true) ? true : false;
       }, true)
     } else if (arguments.length < 2) {
       return _.reduce(collection, function(accumulator, item){
-        return (accumulator == true && item == true) ? true : false;
+        return (accumulator == true && Boolean(item == true)) ? true : false;
       }, true)
     }
 
@@ -240,12 +248,14 @@
   _.some = function(collection, iterator) {
 
     function isTrue(value) {
-      if (value) {
+      if (value == true) {
         return true;
       } else {
         return false;
       }
     }
+
+
 
 
     var callBack;
@@ -256,9 +266,27 @@
       callBack = iterator;
     }
 
-    return _.reduce(collection, function(accumulator, item){
-        return (accumulator == true || callBack(item) == true) ? true : false;
-    }, false)
+    var accum = false;
+    for (var i=0;i<collection.length;i++){
+      if (accum==true || Boolean(callBack(collection[i])) == true){
+        accum = true;
+      } else {
+        accum = false;
+      }
+    }
+
+
+    return accum;
+
+
+
+    // return _.reduce(collection, function(accumulator, item){
+    //     return (accumulator == true || callBack(item) == true) ? true : false;
+    // }, false)
+
+
+
+
 
     //at least one element that evalutes to true when the callback is applied
     // TIP: There's a very clever way to re-use every() here.
