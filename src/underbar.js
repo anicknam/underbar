@@ -128,10 +128,10 @@
 
   // Return all elements of an array that don't pass a truth test.
 
-  // INTERNAL NOTES: The opposite of filter. Created a function called negate that takes an argument and applies the unknown arguments to the function returning them as false. Then created a negativeTest variable running the negate function on the test, then passing it in as the test in filter assuring that the array returned is all of the items that do not pass the test
+  // INTERNAL NOTES: The opposite of filter. Created a function called negate that takes a function and returns a function that does the opposite of what our original function argument intends to do. Then created a negativeTest variable running the negate function on the test before passing it as the test in filter.
   _.reject = function(collection, test) {
 
-    function negate (something) {
+    function negate (something) { //Negate takes a function and returns a function that does the opposite of what our original function argument intends to do
       return function () {
           return !something.apply(this, arguments);
       };
@@ -149,7 +149,7 @@
 
   // Produce a duplicate-free version of the array.
 
-  // INTERNAL NOTES: Creates a new array. Created a function, operation, that pushes numbers that don't exist already in new array to it. This means it will run until all the numbers already exist. We run this function on the array using each.
+  // INTERNAL NOTES: Creates a new array. Created a function that pushes numbers that don't exist already in new array to it. We then use this function as a callback for our each function to loop through our array.
   _.uniq = function(array) {
 
     var newArray = [];
@@ -167,7 +167,7 @@
 
 
   // Return the results of applying an iterator to each element.
-  // INTERNAL NOTES: Applies our function to each item in the old Array and pushes it to a new Array
+  // INTERNAL NOTES: Created a function that pushes the application of iterator on the argument that was passed onto it. We then use that function as a callback for our each function to loop through our array.
   _.map = function(collection, iterator) {
     var newArray = [];
 
@@ -194,13 +194,16 @@
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
 
-  // INTERNAL NOTES: Uses map to iterate over the collection and runs a function that returns the item value of the property given
+  // INTERNAL NOTES: Uses map to iterate over the collection (presumably an array of objects) and uses a callback function that returns the value of the property key of each element of the collection.
+
   _.pluck = function(collection, key) {
     // TIP: map is really handy when you want to transform an array of
     // values into a new array of values. _.pluck() is solved for you
     // as an example of this.
     return _.map(collection, function(item){
+
       return item[key];
+
     });
   };
 
@@ -225,7 +228,7 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
 
-  // INTERNAL NOTES:
+  // INTERNAL NOTES: See comments provided.
   _.reduce = function(collection, iterator, accumulator) {
 
     var accum;
@@ -233,14 +236,14 @@
 
     var collect;
 
-    // If the collection is an array, set collect = to the collection. Else if it's an object, map over their keys and create an array of the objects and set that to collect.
-    if (Array.isArray(collection)){
-      collect=collection;
+    // If the collection is an array, set 'collect' to the collection. Else if it's an object, map over its keys and set 'collect' to an array of the values of all keys.
+    if ( Array.isArray(collection) ){
+      collect = collection;
     } else if (collection.length === undefined) {
-      collect = _.map(Object.keys(collection),function (key){return collection[key];})  // An array of values of our collection object
+      collect = _.map(Object.keys(collection), function (key){ return collection[key]; })  // An array of values of our collection object
     }
 
-    // If the arguments = 3, meaning there is a collection, iterator and accumulator, index is 0 and accum is = to the accumulator. Else if there is no accumulator set the index to 1 and set the accum to the first element of collect
+    // If the number of arguments provided is 3, meaning there is a collection, iterator and accumulator, first to-be-reviewed index is set to 0 and 'accum' is set to the accumulator. Else if there is no accumulator provided, set 'index' to 1 and set 'accum' to the first element of collect.
 
     if (arguments.length == 3) {
       index = 0;
@@ -250,8 +253,7 @@
       accum = collect[0];
     }
 
-    // While the index is less than collect.length, run the iterator on each index adding them together
-
+    // While 'index' is less than length of 'collect', go through the elements of 'collect' starting from the element at 'index' and updating the value of 'accum' with the applicaiton of iterator on 'accum' and the current element.
 
     while (index < collect.length) {
       accum = iterator(accum, collect[index]);
@@ -264,22 +266,26 @@
 
   // Determine if the array or object contains a given value (using `===`).
 
-  // INTERNAL NOTES: Reduces the collection and runs the function to return true if the target is found, else returns false
+  // INTERNAL NOTES: Uses the reduce function starting with false as the initial value and returning true if the target value was found within the array, else returns false.
+
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
+
     return _.reduce(collection, function(wasFound, item) {
       if (wasFound) {
         return true;
       }
       return item === target;
     }, false);
+
   };
 
 
   // Determine whether all of the elements match a truth test.
 
-  //INTERNAL NOTES: If there is a collection and iterator passed, the collection is reduced and if the accumulator evaluates as true and
+  //INTERNAL NOTES: If the number of arguments provided is less than 2, meaning we are not provided with an iterator, uses the Boolean(), as the iterator, to evaluate the truthyness or falseyness of the collection items themselves. Uses the reduce function starting with true as the initial value and a callback function that evaluates to true if both the accumulator and the test on the current item evaluate to true. That means and at each point if the test on the current item evaluates to false, the value of the accumulator remains false all the way to the end of the loop and then gets returned.
+
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
 
@@ -293,15 +299,13 @@
       }, true)
     }
 
-
-
-
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
 
-  //INTERNAL NOTES: Frist defined an isTrue function to evaluate if items are true or false. If there is not an iterator, the callback is true. If there is, then the callback equals the iterator. Setting the accumulator to false, for each item, if the accum is true or the item is true, then it evaluates the accum to true. Otherwise it's false.
+  //INTERNAL NOTES: First defined an isTrue function to evaluate if the argument is true or false. If there is not an iterator, the callback is set to isTrue. If there is, then the callback equals the iterator. Setting the accumulator to false, for each item, if the accum is true or the item is true, then it evaluates the accum to true. Otherwise it's false. Uses the reduce function starting with false as the initial value and a callback function that evaluates to true if either the accumulator or the test on the current item evaluate to true. That means at each point if the test on the current item evaluates to true, the value of the accumulator remains true all the way to the end of the loop and then gets returned.
+
   _.some = function(collection, iterator) {
 
     function isTrue(value) {
@@ -321,19 +325,15 @@
     }
 
     var accum = false;
-    for (var i=0;i<collection.length;i++){
-      if (accum==true || Boolean(callBack(collection[i])) == true){
+    for (var i = 0; i < collection.length; i++){
+      if (accum == true || Boolean(callBack(collection[i])) == true){
         accum = true;
       } else {
         accum = false;
       }
     }
 
-
     return accum;
-
-
-
     //at least one element that evalutes to true when the callback is applied
     // TIP: There's a very clever way to re-use every() here.
   };
@@ -358,15 +358,13 @@
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
 
-  //INTERNAL NOTES: Created an empty sourceArray. Push each item to the sourceArray. For each item in teh source array and for every property in the source Array, set the destination key to the source array key of the array.
+  //INTERNAL NOTES: Created an array of arguments passed on to our function into sourceArray. For each object in the sourceArray and for each property in the current object, add the property and its respectivce value to the destination object.
+
   _.extend = function(destination) {
 
-    var sourceArray = [];
+    var sourceArray = Array.prototype.slice.call(arguments); //Create an array of arguments passed on to our function
 
-    for (var i = 1; i < arguments.length; i++) {
-      sourceArray.push(arguments[i]);
-    }
-
+    // For each object in the sourceArray and for each property in the current object, add the property and its respectivce value to the destination object
     for (var j = 0; j < sourceArray.length; j++) {
       for (var key in sourceArray[j]) {
           destination[key]=sourceArray[j][key];
@@ -380,19 +378,17 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
 
-  //INTERNAL NOTES: Created an empty array and iterated over each item in "this" and pushed to source array. Then iterated over sourceArray and then the key value if the destination was an object, set it to the source array property
+  //INTERNAL NOTES: Created an array of arguments passed on to our function into sourceArray. For each object in the sourceArray and for each property in the current object, if the property does not already exist in the destination object, add the property and its respectivce value to the destination object.
+
   _.defaults = function(destination) {
 
-    var sourceArray = [];
+    var sourceArray = Array.prototype.slice.call(arguments); //Create an array of arguments passed on to our function
 
-    for (var i = 1; i < arguments.length; i++) {
-      sourceArray.push(arguments[i]);
-    }
-
+    //For each object in the sourceArray and for each property in the current object, if the property does not already exist in the destination object, add the property and its respectivce value to the destination object.
     for (var j = 0; j < sourceArray.length; j++) {
       for (var key in sourceArray[j]) {
         if (destination[key] === undefined){
-          destination[key]=sourceArray[j][key];
+          destination[key] = sourceArray[j][key];
         }
       }
     }
@@ -400,7 +396,6 @@
     return destination;
 
   };
-
 
 
   /**
@@ -414,7 +409,8 @@
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
 
-  //
+  //INTERNAL NOTES: Since we want to update the local variables defined in our function, we need to use a closure, meaning to return a function that binds those local variables to itself. First define a local variable alreadyCalled and set that to false. And then return a function that runs the original function with the given arguments if alreadyCalled evaluates to false, else return the current value of the variable result in the outer context.
+
   _.once = function(func) {
     // TIP: These variables are stored in a "closure scope" (worth researching),
     // so that they'll remain available to the newly-generated function every
@@ -446,13 +442,14 @@
   // instead if possible.
 
 
+  //INTERNAL NOTES: Since we want to update the local variables defined in our function, we need to use a closure, meaning to return a function that binds those local variables to itself. Here we want to keep track of the arguments passed on to our original function. Therefore, we use an object and return a function that checks whether the argument provided is already stored in our object as a property and if so, returns the value associated with that property and if not, runs the original function on the argument and store the result as its respective value in the object.
 
   _.memoize = function(func) {
 
     var dict={};
 
     var createMemo = function(n) {
-      if (dict[n] === undefined) {
+      if (dict[n] === undefined) { // Checks whether the argument provided is already stored in our object as a property and if so, returns the value associated with that property and if not, runs the original function on the argument and store the result as its respective value in the object.
         dict[n] = func.apply(this, arguments);
       }
       return dict[n];
@@ -467,12 +464,11 @@
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
 
-  //INTERNAL NOTES: Created a new empty array and called it with "this" and an argument of 2. Used setTimeout method to return the applied properties from func and wait
+  //INTERNAL NOTES: Created an array of the provided arguments. Used setTimeout method to call the provided function after wait milliseconds.
   _.delay = function(func, wait) {
 
     var args = Array.prototype.slice.call(arguments, 2);
     return setTimeout(function () { return func.apply(this, args); }, wait);
-
 
   };
 
@@ -488,16 +484,26 @@
   // TIP: This function's test suite will ask that you not modify the original
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
+
+  //INTERNAL NOTES: First define an empty array which will be then returned as the shuffled array. Since we want to keep track of the new index of each of our array elements in the shuffled array, we define an object that stores the record. As long as the number of the properties in our storing object is less than the number of elements in the array, our while loop first generates a random number between 0 and the length of the array and if the generated number does not already exist in the storing object, it will be added with an arbitrary value of yours truely, and pushes the array element at the index equal to the random number into our result array.
+
   _.shuffle = function(array) {
-    var result=[];
+
+    var result = [];
+
     var dict = {};
 
     var curRandomNo;
+
     while (Object.keys(dict).length < array.length) {  //Object.keys(dict) is an array of keys
+
       curRandomNo = Math.floor(Math.random() * array.length);
+
       if (dict[String(curRandomNo)] === undefined){
-        dict[String(curRandomNo)] = 1;
+
+        dict[String(curRandomNo)] = "Sara and Afsoon :-)";
         result.push(array[curRandomNo]);
+
       }
     }
 
