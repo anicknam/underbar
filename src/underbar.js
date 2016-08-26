@@ -7,9 +7,14 @@
   // Returns whatever value is passed as the argument. This function doesn't
   // seem very useful, but remember it--if a function needs to provide an
   // iterator when the user does not pass one in, this will be handy.
+
+
+  // INTERNAL NOTES: Interesting findings here. Identities of empty objects {} are not equal. Finds strings to be false.
+
   _.identity = function(val) {
     return val;
   };
+
 
   /**
    * COLLECTIONS
@@ -32,21 +37,36 @@
 
   // Return an array of the first n elements of an array. If n is undefined,
   // return just the first element.
+
+
+  // INTERNAL NOTES: Returns index 0 if the argument is undefined; otherwise slice the array from first to n, though if n is more than the array, returns the entire array. If n = 0, returns an empty array.
   _.first = function(array, n) {
     return n === undefined ? array[0] : array.slice(0, n);
   };
 
-  // Like first, but for the last elements. If n is undefined, return just the
-  // last element.
+
+
+  // Like first, but for the last elements. If n is undefined, return just the last element
+
+
+
+  // INTERNAL NOTES: If n is undefined, return the last element in the array. If n > the array.length, return the array. If it's less, slice the array from the length minus n to array.length. This is interesting b/c it's counting from the end of the array.
   _.last = function(array, n) {
     return n === undefined ? array.pop() : ((n>=array.length)? array : array.slice(array.length-n, array.length));
   };
+
+
+
+
 
   // Call iterator(value, key, collection) for each element of collection.
   // Accepts both arrays and objects.
   //
   // Note: _.each does not have a return value, but rather simply runs the
   // iterator function over each item in the input collection.
+
+
+  // INTERNAL NOTES: If collection is an Array, loop through each one and run the iterator. Else if the collection length is undefined (it's an object), find each key in the array and run the iterator over each one.
   _.each = function(collection, iterator) {
     if (Array.isArray(collection)) {
       for (var i=0; i<collection.length; i++){
@@ -59,8 +79,12 @@
     }
   };
 
+
+
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
+
+  // INTERNAL NOTES: This was provided to us, but was a unique one. By setting the result to -1, it iterates over each item in the array and compares if the item is the target and the result is -1 (which of course it is b/c it was set that way), then sets the result to index, returning the result of the index that the target is found.
   _.indexOf = function(array, target){
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
@@ -76,7 +100,11 @@
     return result;
   };
 
+
+
   // Return all elements of an array that pass a truth test.
+
+  // INTERNAL NOTES: Filters over a collection to see if items pass the test and pushes the items that do to a new array
   _.filter = function(collection, test) {
     var result=[];
     for (var i = 0; i < collection.length; i++) {
@@ -87,10 +115,11 @@
    return result;
   };
 
-// ANSWERS
-  //  return n === undefined ? array[0] : array.slice(0, n);
+
 
   // Return all elements of an array that don't pass a truth test.
+
+  // INTERNAL NOTES: The opposite of filter. Created a function called negate that takes an argument and applies the unknown arguments to the function returning them as false. Then created a negativeTest variable running the negate function on the test, then passing it in as the test in filter assuring that the array returned is all of the items that do not pass the test
   _.reject = function(collection, test) {
 
     function negate (something) {
@@ -110,6 +139,8 @@
 
 
   // Produce a duplicate-free version of the array.
+
+  // INTERNAL NOTES: Creates a new array. Created a function, operation, that pushes numbers that don't exist already in new array to it. This means it will run until all the numbers already exist. We run this function on the array using each.
   _.uniq = function(array) {
 
     var newArray = [];
@@ -127,6 +158,7 @@
 
 
   // Return the results of applying an iterator to each element.
+  // INTERNAL NOTES: Applies our function to each item in the old Array and pushes it to a new Array
   _.map = function(collection, iterator) {
     var newArray = [];
 
@@ -152,6 +184,8 @@
   // Takes an array of objects and returns and array of the values of
   // a certain property in it. E.g. take an array of people and return
   // an array of just their ages
+
+  // INTERNAL NOTES: Uses map to iterate over the collection and runs a function that returns the item value of the property given
   _.pluck = function(collection, key) {
     // TIP: map is really handy when you want to transform an array of
     // values into a new array of values. _.pluck() is solved for you
@@ -181,17 +215,23 @@
   //     return total + number * number;
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
+
+  // INTERNAL NOTES:
   _.reduce = function(collection, iterator, accumulator) {
 
     var accum;
     var index;
 
     var collect;
+
+    // If the collection is an array, set collect = to the collection. Else if it's an object, map over their keys and create an array of the objects and set that to collect.
     if (Array.isArray(collection)){
       collect=collection;
     } else if (collection.length === undefined) {
       collect = _.map(Object.keys(collection),function (key){return collection[key];})  // An array of values of our collection object
     }
+
+    // If the arguments = 3, meaning there is a collection, iterator and accumulator, index is 0 and accum is = to the accumulator. Else if there is no accumulator set the index to 1 and set the accum to the first element of collect
 
     if (arguments.length == 3) {
       index = 0;
@@ -200,6 +240,8 @@
       index = 1;
       accum = collect[0];
     }
+
+    // While the index is less than collect.length, run the iterator on each index adding them together
 
 
     while (index < collect.length) {
@@ -212,6 +254,8 @@
   };
 
   // Determine if the array or object contains a given value (using `===`).
+
+  // INTERNAL NOTES: Reduces the collection and runs the function to return true if the target is found, else returns false
   _.contains = function(collection, target) {
     // TIP: Many iteration problems can be most easily expressed in
     // terms of reduce(). Here's a freebie to demonstrate!
@@ -225,6 +269,8 @@
 
 
   // Determine whether all of the elements match a truth test.
+
+  //INTERNAL NOTES: If there is a collection and iterator passed, the collection is reduced and if the accumulator evaluates as true and
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
 
@@ -245,6 +291,8 @@
 
   // Determine whether any of the elements pass a truth test. If no iterator is
   // provided, provide a default one
+
+  //INTERNAL NOTES: Frist defined an isTrue function to evaluate if items are true or false. If there is not an iterator, the callback is true. If there is, then the callback equals the iterator. Setting the accumulator to false, for each item, if the accum is true or the item is true, then it evaluates the accum to true. Otherwise it's false.
   _.some = function(collection, iterator) {
 
     function isTrue(value) {
@@ -254,9 +302,6 @@
         return false;
       }
     }
-
-
-
 
     var callBack;
 
@@ -277,14 +322,6 @@
 
 
     return accum;
-
-
-
-    // return _.reduce(collection, function(accumulator, item){
-    //     return (accumulator == true || callBack(item) == true) ? true : false;
-    // }, false)
-
-
 
 
 
@@ -311,6 +348,8 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1 now contains key1, key2, key3 and bla
+
+  //INTERNAL NOTES: Created an empty sourceArray. Push each item to the sourceArray. For each item in teh source array and for every property in the source Array, set the destination key to the source array key of the array.
   _.extend = function(destination) {
 
     var sourceArray = [];
@@ -331,6 +370,8 @@
 
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
+
+  //INTERNAL NOTES: Created an empty array and iterated over each item in "this" and pushed to source array. Then iterated over sourceArray and then the key value if the destination was an object, set it to the source array property
   _.defaults = function(destination) {
 
     var sourceArray = [];
@@ -363,6 +404,8 @@
 
   // Return a function that can be called at most one time. Subsequent calls
   // should return the previously returned value.
+
+  //
   _.once = function(func) {
     // TIP: These variables are stored in a "closure scope" (worth researching),
     // so that they'll remain available to the newly-generated function every
@@ -416,6 +459,8 @@
   // The arguments for the original function are passed after the wait
   // parameter. For example _.delay(someFunction, 500, 'a', 'b') will
   // call someFunction('a', 'b') after 500ms
+
+  //INTERNAL NOTES: Created a new empty array and called it with "this" and an argument of 2. Used setTimeout method to return the applied properties from func and wait
   _.delay = function(func, wait) {
 
     var args = Array.prototype.slice.call(arguments, 2);
