@@ -41,7 +41,9 @@
 
   // INTERNAL NOTES: Returns index 0 if the argument is undefined; otherwise slice the array from first to n, though if n is more than the array, returns the entire array. If n = 0, returns an empty array.
   _.first = function(array, n) {
+
     return n === undefined ? array[0] : array.slice(0, n);
+
   };
 
 
@@ -52,7 +54,9 @@
 
   // INTERNAL NOTES: If n is undefined, return the last element in the array. If n > the array.length, return the array. If it's less, slice the array from the length minus n to array.length. This is interesting b/c it's counting from the end of the array.
   _.last = function(array, n) {
+
     return n === undefined ? array.pop() : ((n >= array.length) ? array : array.slice(array.length - n, array.length));
+
   };
 
 
@@ -66,8 +70,9 @@
   // iterator function over each item in the input collection.
 
 
-  // INTERNAL NOTES: If collection is an Array, loop through each one and run the iterator. Else if the collection length is undefined (it's an object), find each key in the array and run the iterator over each one.
+  // INTERNAL NOTES: If collection is an Array, loop through each one and run the iterator. Else if the collection length is undefined (i.e. it's an object), find each key in the object and run the iterator over the value of each key in that object.
   _.each = function(collection, iterator) {
+
     if (Array.isArray(collection)) {
       for (var i = 0; i < collection.length; i++){
         iterator(collection[i], i, collection);
@@ -77,22 +82,23 @@
         iterator(collection[key], key, collection);
       }
     }
-  };
 
+  };
 
 
   // Returns the index at which value can be found in the array, or -1 if value
   // is not present in the array.
 
-  // INTERNAL NOTES: This was provided to us, but was a unique one. By setting the result to -1, it iterates over each item in the array and compares if the item is the target and the result is -1 (which of course it is b/c it was set that way), then sets the result to index, returning the result of the index that the target is found.
+  // INTERNAL NOTES: This was provided to us, but was a unique one. By setting the result to -1, it iterates over each item in the array and compares if the item is the target and the result is -1 (b/c we are looking for the first index). Then sets the result to index, returning the result of the index that the target is found. If we were looking for the last index of, we would remove the second condition of result === -1.
   _.indexOf = function(array, target){
     // TIP: Here's an example of a function that needs to iterate, which we've
     // implemented for you. Instead of using a standard `for` loop, though,
     // it uses the iteration helper `each`, which you will need to write.
+
     var result = -1;
 
     _.each(array, function(item, index) {
-      if (item === target && result === -1) {
+      if (item === target && result === -1) { //Because we are looking for the first index
         result = index;
       }
     });
@@ -101,18 +107,21 @@
   };
 
 
-
   // Return all elements of an array that pass a truth test.
 
-  // INTERNAL NOTES: Filters over a collection to see if items pass the test and pushes the items that do to a new array
+  // INTERNAL NOTES: Filters over a collection to see if items pass the test and pushes the items that do pass to a new array
   _.filter = function(collection, test) {
+
     var result = [];
+
     for (var i = 0; i < collection.length; i++) {
      if (test(collection[i])) {
        result.push(collection[i]);
      }
    }
+
    return result;
+
   };
 
 
@@ -226,7 +235,7 @@
 
     // If the collection is an array, set collect = to the collection. Else if it's an object, map over their keys and create an array of the objects and set that to collect.
     if (Array.isArray(collection)){
-      collect = collection;
+      collect=collection;
     } else if (collection.length === undefined) {
       collect = _.map(Object.keys(collection),function (key){return collection[key];})  // An array of values of our collection object
     }
@@ -312,8 +321,8 @@
     }
 
     var accum = false;
-    for (var i = 0 ; i <collection.length; i++){
-      if (accum == true || Boolean(callBack(collection[i])) == true){
+    for (var i=0;i<collection.length;i++){
+      if (accum==true || Boolean(callBack(collection[i])) == true){
         accum = true;
       } else {
         accum = false;
@@ -360,7 +369,7 @@
 
     for (var j = 0; j < sourceArray.length; j++) {
       for (var key in sourceArray[j]) {
-          destination[key] = sourceArray[j][key];
+          destination[key]=sourceArray[j][key];
       }
     }
 
@@ -383,7 +392,7 @@
     for (var j = 0; j < sourceArray.length; j++) {
       for (var key in sourceArray[j]) {
         if (destination[key] === undefined){
-          destination[key] = sourceArray[j][key];
+          destination[key]=sourceArray[j][key];
         }
       }
     }
@@ -440,15 +449,13 @@
 
   _.memoize = function(func) {
 
-    var dict = {};
+    var dict={};
 
     var createMemo = function(n) {
-      var result;
       if (dict[n] === undefined) {
-        result = func.apply(this, arguments);
-        dict[n] = result;
+        dict[n] = func.apply(this, arguments);
       }
-      return result;
+      return dict[n];
     }
    return createMemo;
   };
@@ -482,7 +489,7 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    var result =[];
+    var result=[];
     var dict = {};
 
     var curRandomNo;
