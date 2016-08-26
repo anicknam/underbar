@@ -52,7 +52,7 @@
 
   // INTERNAL NOTES: If n is undefined, return the last element in the array. If n > the array.length, return the array. If it's less, slice the array from the length minus n to array.length. This is interesting b/c it's counting from the end of the array.
   _.last = function(array, n) {
-    return n === undefined ? array.pop() : ((n>=array.length)? array : array.slice(array.length-n, array.length));
+    return n === undefined ? array.pop() : ((n >= array.length) ? array : array.slice(array.length - n, array.length));
   };
 
 
@@ -69,7 +69,7 @@
   // INTERNAL NOTES: If collection is an Array, loop through each one and run the iterator. Else if the collection length is undefined (it's an object), find each key in the array and run the iterator over each one.
   _.each = function(collection, iterator) {
     if (Array.isArray(collection)) {
-      for (var i=0; i<collection.length; i++){
+      for (var i = 0; i < collection.length; i++){
         iterator(collection[i], i, collection);
       }
     } else if (collection.length === undefined) {
@@ -106,7 +106,7 @@
 
   // INTERNAL NOTES: Filters over a collection to see if items pass the test and pushes the items that do to a new array
   _.filter = function(collection, test) {
-    var result=[];
+    var result = [];
     for (var i = 0; i < collection.length; i++) {
      if (test(collection[i])) {
        result.push(collection[i]);
@@ -226,7 +226,7 @@
 
     // If the collection is an array, set collect = to the collection. Else if it's an object, map over their keys and create an array of the objects and set that to collect.
     if (Array.isArray(collection)){
-      collect=collection;
+      collect = collection;
     } else if (collection.length === undefined) {
       collect = _.map(Object.keys(collection),function (key){return collection[key];})  // An array of values of our collection object
     }
@@ -312,8 +312,8 @@
     }
 
     var accum = false;
-    for (var i=0;i<collection.length;i++){
-      if (accum==true || Boolean(callBack(collection[i])) == true){
+    for (var i = 0 ; i <collection.length; i++){
+      if (accum == true || Boolean(callBack(collection[i])) == true){
         accum = true;
       } else {
         accum = false;
@@ -360,7 +360,7 @@
 
     for (var j = 0; j < sourceArray.length; j++) {
       for (var key in sourceArray[j]) {
-          destination[key]=sourceArray[j][key];
+          destination[key] = sourceArray[j][key];
       }
     }
 
@@ -383,7 +383,7 @@
     for (var j = 0; j < sourceArray.length; j++) {
       for (var key in sourceArray[j]) {
         if (destination[key] === undefined){
-          destination[key]=sourceArray[j][key];
+          destination[key] = sourceArray[j][key];
         }
       }
     }
@@ -440,7 +440,7 @@
 
   _.memoize = function(func) {
 
-    var dict={};
+    var dict = {};
 
     var createMemo = function(n) {
       var result;
@@ -482,7 +482,7 @@
   // input array. For a tip on how to make a copy of an array, see:
   // http://mdn.io/Array.prototype.slice
   _.shuffle = function(array) {
-    var result=[];
+    var result =[];
     var dict = {};
 
     var curRandomNo;
